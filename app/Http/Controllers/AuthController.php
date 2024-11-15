@@ -8,10 +8,36 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str; 
 use Carbon\Carbon;
-
+/**
+ * @OA\Info(
+ *     title="API Documentation",
+ *     description="API for authentication system",
+ *     version="1.0.0"
+ * )
+ */
 class AuthController extends Controller
 {
     // Registration method
+
+    /**
+     * @OA\Post(
+     *     path="/api/auth/register",
+     *     summary="Register a new user",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string", example="Test User"),
+     *             @OA\Property(property="email", type="string", format="email", example="test@example.com"),
+     *             @OA\Property(property="password", type="string", example="passcode"),
+     *             @OA\Property(property="password_confirmation", type="string", example="passcode")
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="User registered successfully"),
+     *     @OA\Response(response=422, description="Validation error")
+     * )
+     */
+
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -35,6 +61,23 @@ class AuthController extends Controller
     }
 
     // Login method
+
+    /**
+     * @OA\Post(
+     *     path="/api/auth/login",
+     *     summary="Login a user",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="email", type="string", format="email", example="test@example.com"),
+     *             @OA\Property(property="password", type="string", example="passcode")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Login successful"),
+     *     @OA\Response(response=422, description="Invalid credentials")
+     * )
+     */
     public function login(Request $request)
     { 
         $validated = $request->validate([
@@ -60,6 +103,15 @@ class AuthController extends Controller
     }
 
     // Logout method
+
+    /**
+     * @OA\Post(
+     *     path="/api/auth/logout",
+     *     summary="Logout a user",
+     *     tags={"Authentication"},
+     *     @OA\Response(response=200, description="Logged out successfully")
+     * )
+     */
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();
@@ -69,6 +121,21 @@ class AuthController extends Controller
         ], 200);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/auth/reset-token",
+     *     summary="Generate password reset token",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="email", type="string", format="email", example="test@example.com")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Password reset token generated"),
+     *     @OA\Response(response=422, description="Email not found")
+     * )
+     */
     public function generateResetToken(Request $request)
     { 
         $validated = $request->validate([
@@ -92,6 +159,24 @@ class AuthController extends Controller
             'expires_at' => $expiresAt->toDateTimeString(),
         ]);
     }
+    /**
+     * @OA\Post(
+     *     path="/api/auth/reset-password",
+     *     summary="Reset user password",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="token", type="string", example="reset-token"),
+     *             @OA\Property(property="email", type="string", format="email", example="test@example.com"),
+     *             @OA\Property(property="password", type="string", example="newpassword123"),
+     *             @OA\Property(property="password_confirmation", type="string", example="newpassword123")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Password reset successfully"),
+     *     @OA\Response(response=422, description="Invalid token or expired")
+     * )
+     */
     public function resetPassword(Request $request)
     { 
         $validator = $request->validate([

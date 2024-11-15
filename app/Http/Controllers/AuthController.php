@@ -8,6 +8,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str; 
 use Carbon\Carbon;
+use App\Traits\ApiResponseTrait;
 /**
  * @OA\Info(
  *     title="API Documentation",
@@ -17,6 +18,7 @@ use Carbon\Carbon;
  */
 class AuthController extends Controller
 {
+    use ApiResponseTrait;
     // Registration method
 
     /**
@@ -53,11 +55,10 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json([
-            'message' => 'User registered successfully',
+        return $this->successResponse([
             'access_token' => $token,
             'token_type' => 'Bearer',
-        ], 201);
+        ], 'User registered successfully', 201);
     }
 
     // Login method
@@ -86,20 +87,17 @@ class AuthController extends Controller
         ]); 
 
         if (!Auth::attempt($validated)) {
-            throw ValidationException::withMessages([
-                'email' => ['Invalid credentials.']
-            ]);
+            return $this->errorResponse('Invalid credentials', 422);
         }
 
         $user = Auth::user();
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json([
-            'message' => 'Login successful',
+        return $this->successResponse([
             'access_token' => $token,
             'token_type' => 'Bearer',
-        ], 200);
+        ], 'Login successful');
     }
 
     // Logout method
@@ -116,9 +114,7 @@ class AuthController extends Controller
     {
         $request->user()->tokens()->delete();
 
-        return response()->json([
-            'message' => 'Logged out successfully'
-        ], 200);
+        return $this->successResponse(null, 'Logged out successfully');
     }
 
     /**
@@ -153,11 +149,10 @@ class AuthController extends Controller
         $user->password_reset_token_expires_at = $expiresAt;
         $user->save();
  
-        return response()->json([
-            'message' => 'Password reset token generated successfully.',
+        return $this->successResponse([
             'token' => $token,
             'expires_at' => $expiresAt->toDateTimeString(),
-        ]);
+        ], 'Password reset token generated successfully.');
     }
     /**
      * @OA\Post(
@@ -188,15 +183,15 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user) { 
-            return response()->json(['error' => 'User not found'], 400);
+            return $this->errorResponse('User not found', 400);
         }
  
         if ($user->password_reset_token !== $request->token) {
-            return response()->json(['error' => 'Invalid token'], 400);
+            return $this->errorResponse('Invalid token', 400);
         }
 
         if (Carbon::now()->greaterThan($user->password_reset_token_expires_at)) {
-            return response()->json(['error' => 'Token has expired'], 400);
+            return $this->errorResponse('Token has expired', 400);
         }
  
         $user->password = bcrypt($request->password);
@@ -204,8 +199,6 @@ class AuthController extends Controller
         $user->password_reset_token_expires_at = null;
         $user->save();
 
-        return response()->json([
-            'message' => 'Password reset successfully.',
-        ]);
+        return $this->successResponse(null, 'Password reset successfully.');
     }
 }

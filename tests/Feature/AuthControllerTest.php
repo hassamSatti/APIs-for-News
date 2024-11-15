@@ -23,7 +23,14 @@ class AuthControllerTest extends TestCase
             'password_confirmation' => 'password123',
         ]);
 
-        $response->assertStatus(201)->assertJsonStructure(['message', 'access_token', 'token_type']);
+        $response->assertStatus(201) ->assertJsonStructure([
+                 'success',    
+                 'message',     
+                 'data' => [
+                     'access_token', 
+                     'token_type', 
+                 ],
+             ]);
 
         $this->assertDatabaseHas('users', [
             'email' => 'test@example.com',
@@ -39,7 +46,14 @@ class AuthControllerTest extends TestCase
             'password' => 'password123',
         ]);
 
-        $response->assertStatus(200)->assertJsonStructure(['message', 'access_token', 'token_type']);
+        $response->assertStatus(200) ->assertJsonStructure([
+                 'success',
+                 'message',
+                 'data' => [
+                     'access_token',
+                     'token_type',
+                 ],
+             ]);
     }
     /** @test */ 
     public function it_logs_out_user_successfully()

@@ -8,10 +8,11 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Throwable;
-
+use App\Traits\ApiResponseTrait;
 
 class Handler extends ExceptionHandler
 {
+    use ApiResponseTrait;
     /**
      * A list of the exception types that are not reported.
      *
@@ -47,35 +48,40 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     { 
         if ($request->is('api/*')) {
-            
+             
             if ($exception instanceof ValidationException) {
-                return response()->json([
-                    'message' => 'Validation failed',
-                    'errors' => $exception->errors()
-                ], 422);
+                return $this->errorResponse(
+                    'Validation failed',
+                    422,
+                    $exception->errors()
+                );
             }
-     
+ 
             if ($exception instanceof NotFoundHttpException) {
-                return response()->json([
-                    'message' => 'Not Found'
-                ], 404);
+                return $this->errorResponse(
+                    'Not Found',
+                    404
+                );
             }
-     
+ 
             if ($exception instanceof AuthenticationException) {
-                return response()->json([
-                    'message' => 'Invalid or expired token. Please log in again.'
-                ], 401);
+                return $this->errorResponse(
+                    'Invalid or expired token. Please log in again.',
+                    401
+                );
             }
-     
+ 
             if ($exception instanceof AccessDeniedHttpException) {
-                return response()->json([
-                    'message' => 'Access denied'
-                ], 403);
-            }
-            return response()->json([
-                'message' => 'Internal Server Error',
-                'error' => $exception->getMessage()
-            ], 500);
+                return $this->errorResponse(
+                    'Access denied',
+                    403
+                );
+            } 
+            return $this->errorResponse(
+                'Internal Server Error',
+                500,
+                ['error' => $exception->getMessage()]
+            );
         }
 
         return parent::render($request, $exception);

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\UserNewsPreferenceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,4 +33,7 @@ Route::prefix('auth')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('news', [NewsController::class, 'index']);
     Route::get('news/{id}', [NewsController::class, 'show']);
+    Route::post('preferences', [UserNewsPreferenceController::class, 'addOrUpdate']);
+    Route::get('preferences', [UserNewsPreferenceController::class, 'getPreferences']);
+    Route::get('personalizedNews', [UserNewsPreferenceController::class, 'getNewsBasedOnPreferences']);
 });

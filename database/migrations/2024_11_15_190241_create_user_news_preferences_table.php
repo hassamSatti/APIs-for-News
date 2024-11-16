@@ -16,14 +16,12 @@ class CreateUserNewsPreferencesTable extends Migration
         Schema::create('user_news_preferences', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('author', 255)->nullable();   
-            $table->string('source', 255)->nullable();   
+            $table->json('authors')->nullable();   
+            $table->json('sources')->nullable();   
             $table->timestamps();
 
             // Adding indexes for better performance
             $table->index('user_id');
-            $table->index('author');
-            $table->index('source');
         });
     }
 

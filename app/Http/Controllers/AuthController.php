@@ -164,8 +164,8 @@ class AuthController extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="token", type="string", example="reset-token"),
      *             @OA\Property(property="email", type="string", format="email", example="test@example.com"),
-     *             @OA\Property(property="password", type="string", example="newpassword123"),
-     *             @OA\Property(property="password_confirmation", type="string", example="newpassword123")
+     *             @OA\Property(property="password", type="string", example="passcode"),
+     *             @OA\Property(property="password_confirmation", type="string", example="passcode")
      *         )
      *     ),
      *     @OA\Response(response=200, description="Password reset successfully"),

@@ -10,7 +10,16 @@ class UserNewsPreference extends Model
     use HasFactory; 
     protected $fillable = [
         'user_id',
-        'author',
-        'source',
-    ];  
+        'authors',
+        'sources',
+    ]; 
+
+    protected $casts = [
+        'authors' => 'array',
+        'sources' => 'array',
+    ]; 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

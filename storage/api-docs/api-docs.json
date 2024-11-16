@@ -43,7 +43,7 @@
                     }
                 },
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "User registered successfully"
                     },
                     "422": {

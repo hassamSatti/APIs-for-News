@@ -17,12 +17,15 @@ class CreateNewsTable extends Migration
             $table->id();
             $table->string('source');
             $table->string('author')->nullable();
-            $table->string('title');
+            $table->string('title')->unique();
             $table->text('content');
             $table->text('description');
             $table->timestamp('published_at');
             $table->timestamps();
+
+            $table->unique(['title', 'published_at']);
         });
+        
     }
 
     /**

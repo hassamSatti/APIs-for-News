@@ -35,7 +35,7 @@ class AuthController extends Controller
      *             @OA\Property(property="password_confirmation", type="string", example="passcode")
      *         )
      *     ),
-     *     @OA\Response(response=201, description="User registered successfully"),
+     *     @OA\Response(response=200, description="User registered successfully"),
      *     @OA\Response(response=422, description="Validation error")
      * )
      */

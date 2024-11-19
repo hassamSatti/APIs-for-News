@@ -38,15 +38,11 @@ This is a Laravel-based News Aggregator API that provides user authentication, a
    git clone <repository-url>
    cd <repository-folder>
 
-2. **Copy the .env.example file to .env:**
-   ```bash
-   cp .env.example .env
-
-3. **Build and Start Docker Containers:**
+2. **Build and Start Docker Containers:**
    ```bash
    docker-compose up -d
 
-4. **Install Dependencies:**
+3. **Install Dependencies:**
    - Access the Docker container & Install dependencies:
    ```bash
    docker exec -it <container-name> bash
@@ -54,7 +50,7 @@ This is a Laravel-based News Aggregator API that provides user authentication, a
    php artisan key:generate
    php artisan schedule
 
-5. **Access the Application:**
+4. **Access the Application:**
   - **API Base URL**: http://localhost:8000
   - **Swagger Docs**: http://localhost:8000/api/documentation
 

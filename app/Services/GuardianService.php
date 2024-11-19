@@ -21,14 +21,17 @@ class GuardianService implements NewsInterface
         return array_map(function ($new) {
             return [
                 'source' => 'The Guardian',
-                'author' => $new['fields']['byline'] ?? null,
-                'title' => isset($new['webTitle']) ? (string)$new['webTitle'] : 'Untitled',
-                'content' => isset($new['fields']['body']) ? (string)$new['fields']['body'] : '',
-                'description' => is_array($new['fields']['trailText'] ?? null) ? ($new['fields']['trailText'][0] ?? 'No Description') : (string)($new['fields']['trailText'] ?? 'No Description'),
+                'author' => isset($new['fields']['byline']) ? substr((string)$new['fields']['byline'], 0, 255) : null,
+                'title' => isset($new['webTitle']) ? substr((string)$new['webTitle'], 0, 255) : 'Untitled',
+                'content' => isset($new['fields']['body']) ? substr((string)$new['fields']['body'], 0, 65535) : '',
+                'description' => is_array($new['fields']['trailText'] ?? null) 
+                    ? ($new['fields']['trailText'][0] ?? 'No Description') 
+                    : substr((string)($new['fields']['trailText'] ?? 'No Description'), 0, 65535),
                 'published_at' => isset($new['webPublicationDate']) 
                     ? \Carbon\Carbon::parse($new['webPublicationDate'])->format('Y-m-d H:i:s') 
                     : now()->format('Y-m-d H:i:s'),
             ];
         }, $news);
+        
     }
 }

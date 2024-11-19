@@ -23,9 +23,9 @@ class NYTService implements NewsInterface
             return [
                 'source' => 'New York Times',
                 'author' => $new['byline'] ?? null,
-                'title' => isset($new['title']) ? (string)$new['title'] : 'Untitled',
-                'content' => isset($new['abstract']) ? (string)$new['abstract'] : '',
-                'description' => is_array($new['des_facet'] ?? null) ? ($new['des_facet'][0] ?? 'No Description') : (string)($new['des_facet'] ?? 'No Description'),
+                'title' => isset($new['title']) ? (string)substr($new['title'], 0, 255) : 'Untitled',
+                'content' => isset($new['abstract']) ? (string)substr($new['abstract'], 0, 65535) : '',
+                'description' => is_array($new['des_facet'] ?? null) ? ($new['des_facet'][0] ?? 'No Description') : (string)(substr($new['des_facet'], 0, 65535) ?? 'No Description'),
                 'published_at' => isset($new['publishedAt']) 
                     ? \Carbon\Carbon::parse($new['publishedAt'])->format('Y-m-d H:i:s') 
                     : now()->format('Y-m-d H:i:s'),

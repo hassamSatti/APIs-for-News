@@ -114,7 +114,7 @@ class NewsController extends Controller
             $news = $query->paginate(10);
 
             // Store the results in the cache for 10 minutes
-            Cache::put($cacheKey, $news, now()->addMinutes(10));
+            Cache::put($cacheKey, $news, now()->addMinutes(1));
         }
         return $this->successResponse($news, 'News fetched successfully');
     } 

@@ -37,17 +37,34 @@ class NewsFetching extends Command
      * @return int
      */
     public function handle()
-    {
+    { 
         $data = [];
-        
-        $newsSources = app('news.fetchers');
+        try {
+            $newsSources = app('news.fetchers');
 
-        foreach ($newsSources as $source) {
-            $news = $source->fetchNews(); 
-            $data = array_merge($data, $news);
-        } 
-        News::upsert($data, ['title'], ['source', 'author', 'content', 'description']);
-
-        $this->info('News fetched and saved successfully.');
+            foreach ($newsSources as $source) {
+                try {
+                    $news = $source->fetchNews(); 
+                    $data = array_merge($data, $news);
+                } catch (\Exception $e) {
+                    \Log::error("Error fetching news from source: " . get_class($source) . ". Error: " . $e->getMessage());
+                    $this->error("Error fetching news from source: " . get_class($source));
+                }
+            } 
+            if (!empty($data)) {
+                try {
+                    News::upsert($data, ['title'], ['source', 'author', 'content', 'description']);
+                    $this->info('News fetched and saved successfully.');
+                } catch (\Exception $e) {
+                    \Log::error("Error saving news to the database. Error: " . $e->getMessage());
+                    $this->error("Error saving news to the database. Please try again.");
+                }
+            } else {
+                $this->info('No news fetched to save.');
+            }
+        } catch (\Exception $e) { 
+            \Log::error("An unexpected error occurred while fetching news. Error: " . $e->getMessage());
+            $this->error("An unexpected error occurred while fetching the news.");
+        }
     }
 }

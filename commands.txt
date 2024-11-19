@@ -1,2 +1,4 @@
-Run User Seeder
-    php artisan db:seed --class=UserSeeder
+Commands need to run 
+
+docker-compose up --build
+docker-compose exec app php artisan schedule

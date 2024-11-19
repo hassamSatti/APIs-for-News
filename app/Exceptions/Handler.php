@@ -77,6 +77,14 @@ class Handler extends ExceptionHandler
                     403
                 );
             } 
+ 
+            if ($exception instanceof \Swift_TransportException) {
+                return $this->errorResponse(
+                    'Failed to send the email. Please check the email address or the mail server configuration.',
+                    503,
+                    ['error' => $exception->getMessage()]
+                );
+            }
             return $this->errorResponse(
                 'Internal Server Error',
                 500,

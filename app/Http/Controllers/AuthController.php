@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str; 
 use Carbon\Carbon;
 use App\Traits\ApiResponseTrait;
+use App\Mail\ResetPasswordMail;
+use Illuminate\Support\Facades\Mail;
 /**
  * @OA\Info(
  *     title="API Documentation",
@@ -144,13 +146,15 @@ class AuthController extends Controller
         $token = Str::random(60);
  
         $expiresAt = Carbon::now()->addSeconds(120);
+
+        
+        Mail::to($request->email, 'Recipient Name')->send(new ResetPasswordMail($token, $request->email));
  
         $user->password_reset_token = $token;
         $user->password_reset_token_expires_at = $expiresAt;
         $user->save();
  
         return $this->successResponse([
-            'token' => $token,
             'expires_at' => $expiresAt->toDateTimeString(),
         ], 'Password reset token generated successfully.');
     }
@@ -171,7 +175,7 @@ class AuthController extends Controller
      *     @OA\Response(response=200, description="Password reset successfully"),
      *     @OA\Response(response=422, description="Invalid token or expired")
      * )
-     */
+    */
     public function resetPassword(Request $request)
     { 
         $validator = $request->validate([

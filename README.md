@@ -39,9 +39,7 @@ This is a Laravel-based News Aggregator API that provides user authentication, a
    cd <repository-folder>
    
 2. **Map Directory:**
-   - Update Directory with where you clone the:
-      - services->app->volumes in docker-compose.yml
-      - services->nginx->volumes in docker-compose.yml
+   - Update the .env file with the PROJECT_PATH to match the location where the project is cloned.
 
 3. **Build and Start Docker Containers:**
    ```bash

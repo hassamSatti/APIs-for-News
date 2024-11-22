@@ -39,7 +39,7 @@ RUN if [ "$(uname)" != "Darwin" ] && [ "$(uname)" != "Linux" ]; then echo "Skipp
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 # Make the entrypoint script executable
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN sed -i 's/\r$//' /usr/local/bin/docker-entrypoint.sh && chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Set the entrypoint script
 ENTRYPOINT ["docker-entrypoint.sh"]

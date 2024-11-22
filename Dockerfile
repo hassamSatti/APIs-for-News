@@ -1,6 +1,5 @@
 # Step 1: Choose the PHP image
-FROM php:8.2-fpm
-
+FROM php:8.2-fpm 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     libpng-dev \
@@ -34,7 +33,7 @@ COPY . .
 RUN composer install --no-interaction --optimize-autoloader
 
 # Step 7: Set file permissions (optional)
-RUN chown -R www-data:www-data /var/www && chmod -R 775 /var/www/storage /var/www/bootstrap/cache 
+RUN if [ "$(uname)" != "Darwin" ] && [ "$(uname)" != "Linux" ]; then echo "Skipping chown on Windows"; else chown -R www-data:www-data /var/www && chmod -R 775 /var/www/storage /var/www/bootstrap/cache; fi
 
 # Copy the entrypoint script into the container
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

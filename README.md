@@ -39,7 +39,7 @@ This is a Laravel-based News Aggregator API that provides user authentication, a
    cd <repository-folder>
    
 2. **Map Directory:**
-   - Update the .env file with the PROJECT_PATH to match the location where the project is cloned.
+   - Update the PROJECT_PATH variable in the .env file to the location where the project has been cloned.
 
 3. **Build and Start Docker Containers:**
    ```bash

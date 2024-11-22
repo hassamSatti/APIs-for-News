@@ -6,16 +6,7 @@ services:
     container_name: news_apis
     working_dir: /var/www
     volumes:
-      - /Applications/XAMPP/xamppfiles/htdocs/news_apis:/var/www
-    environment:
-      - MAIL_MAILER=smtp
-      - MAIL_HOST=live.smtp.mailtrap.io
-      - MAIL_PORT=587
-      - MAIL_USERNAME=api
-      - MAIL_PASSWORD=f651a3e4a42c49e2bdd990e25fc3aa22
-      - MAIL_ENCRYPTION=tls
-      - MAIL_FROM_ADDRESS=hello@demomailtrap.com
-      - MAIL_FROM_NAME="${APP_NAME}"
+      - ${PROJECT_PATH}:/var/www
     networks:
       - laravel
 
@@ -36,7 +27,7 @@ services:
     image: nginx:alpine
     container_name: nginx
     volumes:
-      - /Applications/XAMPP/xamppfiles/htdocs/news_apis:/var/www
+      - ${PROJECT_PATH}:/var/www
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "8080:80"
